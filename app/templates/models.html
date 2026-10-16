@@ -1,5 +1,100 @@
 {% extends "base.html" %}
+
+{% block title %}Models &bull; Placement Prediction System{% endblock %}
+
 {% block content %}
-<h2>Models</h2>
-<p>Trained models will be listed here.</p>
+
+<div class="page-header">
+  <div>
+    <h2 class="page-title">
+      <i class="bi bi-cpu-fill" style="color: var(--accent-indigo);"></i>
+      Machine Learning Models Catalog
+    </h2>
+    <p class="page-subtitle">Algorithmic architectures trained on student placement records grouped by learning paradigm</p>
+  </div>
+  <div>
+    <span class="badge badge-indigo">
+      <i class="bi bi-collection"></i> 9 Implemented Algorithms
+    </span>
+  </div>
+</div>
+
+<!-- Supervised Section -->
+<div class="card">
+  <div class="card-title">
+    <i class="bi bi-diagram-3" style="color: var(--accent-cyan);"></i>
+    Supervised Learning Suite (Classification & Regression)
+  </div>
+  <p style="color: var(--text-muted); font-size: 0.88rem; margin-bottom: 1.5rem;">
+    Trained on labeled historical student outcomes to predict binary placement status or forecast continuous CTC salary package offerings.
+  </p>
+
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.25rem;">
+    {% for model in supervised_models %}
+    <div style="background: rgba(0,0,0,0.15); border: 1px solid var(--border-color); border-left: 4px solid var(--accent-indigo); border-radius: var(--radius-md); padding: 1.25rem; display: flex; flex-direction: column; justify-content: space-between;">
+      <div>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+          <span class="badge {% if model.task == 'Classification' %}badge-emerald{% else %}badge-cyan{% endif %}">
+            {{ model.task }}
+          </span>
+          <span style="font-size: 0.75rem; font-family: var(--font-mono); color: var(--text-muted);">
+            <i class="bi bi-file-code"></i> {{ model.file }}
+          </span>
+        </div>
+
+        <h4 style="font-size: 1.1rem; font-weight: 700; color: var(--text-primary); margin-bottom: 0.5rem;">
+          {{ model.name }}
+        </h4>
+
+        <p style="font-size: 0.88rem; color: var(--text-secondary); line-height: 1.5; margin-bottom: 0.75rem;">
+          {{ model.detail }}
+        </p>
+      </div>
+
+      {% if model.target %}
+      <div style="padding-top: 0.75rem; border-top: 1px solid var(--border-color); font-size: 0.82rem; color: var(--text-muted);">
+        <strong style="color: var(--text-primary);">Target Objective:</strong> <span class="badge badge-indigo">{{ model.target }}</span>
+      </div>
+      {% endif %}
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+<!-- Unsupervised Section -->
+<div class="card">
+  <div class="card-title">
+    <i class="bi bi-bounding-box-circles" style="color: var(--accent-purple);"></i>
+    Unsupervised Learning Suite (Clustering & Anomaly Detection)
+  </div>
+  <p style="color: var(--text-muted); font-size: 0.88rem; margin-bottom: 1.5rem;">
+    Partitions student profiles into latent performance cohorts and identifies anomalous outlier students without ground-truth labels.
+  </p>
+
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.25rem;">
+    {% for model in unsupervised_models %}
+    <div style="background: rgba(0,0,0,0.15); border: 1px solid var(--border-color); border-left: 4px solid var(--accent-purple); border-radius: var(--radius-md); padding: 1.25rem; display: flex; flex-direction: column; justify-content: space-between;">
+      <div>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+          <span class="badge badge-purple">
+            {{ model.task }}
+          </span>
+          <span style="font-size: 0.75rem; font-family: var(--font-mono); color: var(--text-muted);">
+            <i class="bi bi-file-code"></i> {{ model.file }}
+          </span>
+        </div>
+
+        <h4 style="font-size: 1.1rem; font-weight: 700; color: var(--text-primary); margin-bottom: 0.5rem;">
+          {{ model.name }}
+        </h4>
+
+        <p style="font-size: 0.88rem; color: var(--text-secondary); line-height: 1.5; margin-bottom: 0.75rem;">
+          {{ model.detail }}
+        </p>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
 {% endblock %}

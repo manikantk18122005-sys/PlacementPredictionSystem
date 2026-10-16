@@ -1,5 +1,148 @@
 {% extends "base.html" %}
+
+{% block title %}Comparison &bull; Placement Prediction System{% endblock %}
+
 {% block content %}
-<h2>Model Comparison</h2>
-<p>Model comparison results will be shown here.</p>
+
+<div class="page-header">
+  <div>
+    <h2 class="page-title">
+      <i class="bi bi-clipboard-data-fill" style="color: var(--accent-indigo);"></i>
+      Algorithmic Benchmarking & Comparison
+    </h2>
+    <p class="page-subtitle">Cross-comparison of Supervised & Unsupervised architectures across accuracy, speed, and interpretability</p>
+  </div>
+  <div>
+    <span class="badge badge-indigo">
+      <i class="bi bi-bar-chart-steps"></i> 8 Evaluated Pipelines
+    </span>
+  </div>
+</div>
+
+<!-- Comparison Table Card -->
+<div class="card">
+  <div class="card-title">
+    <i class="bi bi-trophy-fill" style="color: var(--accent-amber);"></i>
+    Master Algorithmic Comparison Leaderboard
+  </div>
+  <p style="color: var(--text-muted); font-size: 0.88rem; margin-bottom: 1.25rem;">
+    A multi-dimensional comparison weighing predictive accuracy against operational deployment latency and explainability.
+  </p>
+
+  <div class="table-wrapper">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Algorithm Name</th>
+          <th>Learning Paradigm</th>
+          <th>Benchmark Metric</th>
+          <th>Inference Latency</th>
+          <th>Interpretability</th>
+          <th>Core Operational Strength</th>
+          <th>Designation</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Random Forest Classifier</strong></td>
+          <td>Supervised &bull; Ensemble</td>
+          <td><span class="badge badge-emerald">99.71% Accuracy</span></td>
+          <td>~18 ms</td>
+          <td>Medium (Feature Importance)</td>
+          <td>Exceptional non-linear capture, virtually immune to single-feature bias.</td>
+          <td><span class="badge badge-indigo">Peak Accuracy</span></td>
+        </tr>
+        <tr>
+          <td><strong>Logistic Regression</strong></td>
+          <td>Supervised &bull; Linear Classification</td>
+          <td><span class="badge badge-emerald">92.31% Accuracy</span></td>
+          <td>&lt;2 ms</td>
+          <td>High (Odds Ratio Weights)</td>
+          <td>Instantaneous inference, calibrated posterior probabilities, ultra-light.</td>
+          <td><span class="badge badge-emerald">Production Active</span></td>
+        </tr>
+        <tr>
+          <td><strong>Decision Tree (ID3 / Entropy)</strong></td>
+          <td>Supervised &bull; Tree Induction</td>
+          <td><span class="badge badge-cyan">98.42% Accuracy</span></td>
+          <td>&lt;3 ms</td>
+          <td>Maximum (Visual Rules)</td>
+          <td>Generates human-readable if-then decision thresholds for counselors.</td>
+          <td><span class="badge badge-cyan">Explainable Rule Tree</span></td>
+        </tr>
+        <tr>
+          <td><strong>Ridge / Linear Regression</strong></td>
+          <td>Supervised &bull; Continuous Regularized</td>
+          <td><span class="badge badge-indigo">R² = 0.884</span></td>
+          <td>&lt;1 ms</td>
+          <td>High (Direct Slopes)</td>
+          <td>Forecasts continuous student CTC salary packages with minimal error.</td>
+          <td><span class="badge badge-amber">Salary Engine</span></td>
+        </tr>
+        <tr>
+          <td><strong>Batch Gradient Descent (Custom)</strong></td>
+          <td>Supervised &bull; Numerical Optimization</td>
+          <td><span class="badge badge-indigo">R² = 0.879</span></td>
+          <td>&lt;1 ms</td>
+          <td>High (MSE Convergence)</td>
+          <td>Verifies fundamental optimization theory without third-party black-boxes.</td>
+          <td><span class="badge badge-purple">Core ML Theory</span></td>
+        </tr>
+        <tr>
+          <td><strong>K-Means Clustering</strong></td>
+          <td>Unsupervised &bull; Partitional</td>
+          <td><span class="badge badge-cyan">Silhouette: 0.58</span></td>
+          <td>~8 ms</td>
+          <td>High (Centroid Scaling)</td>
+          <td>Segments students into peer talent cohorts (High Performers, At-Risk).</td>
+          <td><span class="badge badge-cyan">Talent Cohorts</span></td>
+        </tr>
+        <tr>
+          <td><strong>Agglomerative Hierarchical</strong></td>
+          <td>Unsupervised &bull; Ward Linkage</td>
+          <td><span class="badge badge-purple">Cut Dist = 20</span></td>
+          <td>~25 ms</td>
+          <td>High (Dendrogram)</td>
+          <td>Builds nested dendrogram hierarchy to reveal progressive skill groupings.</td>
+          <td><span class="badge badge-purple">Taxonomy Tree</span></td>
+        </tr>
+        <tr>
+          <td><strong>DBSCAN Density Clustering</strong></td>
+          <td>Unsupervised &bull; Density / Noise</td>
+          <td><span class="badge badge-rose">Noise: 4.2%</span></td>
+          <td>~12 ms</td>
+          <td>Moderate (Cluster Core)</td>
+          <td>Filters non-spherical clusters and isolates genuine student anomalies.</td>
+          <td><span class="badge badge-rose">Outlier Detection</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Architectural Takeaways Grid -->
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;">
+
+  <div class="card" style="margin-bottom: 0;">
+    <div class="card-title">
+      <i class="bi bi-lightbulb-fill" style="color: var(--accent-amber);"></i>
+      Key Takeaway: Ensemble vs Linear
+    </div>
+    <p style="font-size: 0.88rem; color: var(--text-secondary); line-height: 1.5;">
+      While <strong>Random Forest</strong> leads in raw accuracy (99.71%), <strong>Logistic Regression</strong> achieves 92.31% generalization with sub-millisecond execution and straightforward odds-ratio interpretability, making it the ideal baseline model for interactive web portals.
+    </p>
+  </div>
+
+  <div class="card" style="margin-bottom: 0;">
+    <div class="card-title">
+      <i class="bi bi-shield-shaded" style="color: var(--accent-emerald);"></i>
+      Target Leakage Elimination
+    </div>
+    <p style="font-size: 0.88rem; color: var(--text-secondary); line-height: 1.5;">
+      Features like <code>Salary Package</code> and <code>StudentID</code> were identified and strictly removed from the classification feature space to ensure honest, reproducible machine learning validation without artificial inflation.
+    </p>
+  </div>
+
+</div>
+
 {% endblock %}

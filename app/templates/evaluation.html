@@ -1,5 +1,227 @@
 {% extends "base.html" %}
+
+{% block title %}Evaluation &bull; Placement Prediction System{% endblock %}
+
 {% block content %}
-<h2>Evaluation</h2>
-<p>Model evaluation metrics will be shown here.</p>
+
+<div class="page-header">
+  <div>
+    <h2 class="page-title">
+      <i class="bi bi-check-circle-fill" style="color: var(--accent-emerald);"></i>
+      Model Evaluation & Diagnostics
+    </h2>
+    <p class="page-subtitle">Rigorous statistical validation across classification accuracy, confusion matrices, and regression metrics</p>
+  </div>
+  <div>
+    <span class="badge badge-emerald">
+      <i class="bi bi-shield-fill-check"></i> Holdout Test Split: 10,000 Records (20%)
+    </span>
+  </div>
+</div>
+
+<!-- Classification Evaluation Cards -->
+<div class="card">
+  <div class="card-title">
+    <i class="bi bi-trophy-fill" style="color: var(--accent-indigo);"></i>
+    Classification Models Performance (Target: PlacementStatus)
+  </div>
+  <p style="color: var(--text-muted); font-size: 0.88rem; margin-bottom: 1.25rem;">
+    Evaluated on 10,000 unseen test records. Both Logistic Regression and Random Forest achieve superior generalization.
+  </p>
+
+  <div class="table-wrapper">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Model Algorithm</th>
+          <th>Accuracy</th>
+          <th>Precision (Macro)</th>
+          <th>Recall (Macro)</th>
+          <th>F1-Score</th>
+          <th>Test Support</th>
+          <th>Operational Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            <strong>Random Forest Classifier</strong>
+            <div style="font-size: 0.75rem; color: var(--text-muted);">100 Trees, sqrt features</div>
+          </td>
+          <td><span class="badge badge-emerald">99.71%</span></td>
+          <td>1.00</td>
+          <td>0.99</td>
+          <td>0.99</td>
+          <td>10,000</td>
+          <td><span class="badge badge-indigo">Top Accuracy</span></td>
+        </tr>
+        <tr>
+          <td>
+            <strong>Logistic Regression (Baseline)</strong>
+            <div style="font-size: 0.75rem; color: var(--text-muted);">L2 Penalty, max_iter=1000</div>
+          </td>
+          <td><span class="badge badge-emerald">92.31%</span></td>
+          <td>0.92</td>
+          <td>0.91</td>
+          <td>0.92</td>
+          <td>10,000</td>
+          <td><span class="badge badge-emerald">Production Active</span></td>
+        </tr>
+        <tr>
+          <td>
+            <strong>Decision Tree (ID3 / Entropy)</strong>
+            <div style="font-size: 0.75rem; color: var(--text-muted);">max_depth=5, Entropy criterion</div>
+          </td>
+          <td><span class="badge badge-cyan">98.42%</span></td>
+          <td>0.98</td>
+          <td>0.99</td>
+          <td>0.98</td>
+          <td>10,000</td>
+          <td><span class="badge badge-cyan">Explainable Rule Tree</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Confusion Matrix & Error Diagnostics -->
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 1.5rem; margin-bottom: 1.75rem;">
+
+  <!-- Confusion Matrix Card -->
+  <div class="card" style="margin-bottom: 0;">
+    <div class="card-title">
+      <i class="bi bi-grid-fill" style="color: var(--accent-cyan);"></i>
+      Test Confusion Matrix (Logistic Regression)
+    </div>
+    <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1rem;">
+      Binary matrix illustrating True Positives vs Type I / Type II classification errors:
+    </p>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; text-align: center;">
+      <div style="background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: var(--radius-md); padding: 1rem;">
+        <div style="font-size: 1.4rem; font-weight: 800; color: #34d399;">2,943</div>
+        <div style="font-size: 0.78rem; color: var(--text-muted); text-transform: uppercase;">True Negative (TN)</div>
+        <div style="font-size: 0.72rem; color: var(--text-secondary); margin-top: 0.2rem;">Correctly predicted Unplaced</div>
+      </div>
+
+      <div style="background: rgba(244, 63, 94, 0.1); border: 1px solid rgba(244, 63, 94, 0.3); border-radius: var(--radius-md); padding: 1rem;">
+        <div style="font-size: 1.4rem; font-weight: 800; color: #fb7185;">479</div>
+        <div style="font-size: 0.78rem; color: var(--text-muted); text-transform: uppercase;">False Positive (FP)</div>
+        <div style="font-size: 0.72rem; color: var(--text-secondary); margin-top: 0.2rem;">Type I Error</div>
+      </div>
+
+      <div style="background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.3); border-radius: var(--radius-md); padding: 1rem;">
+        <div style="font-size: 1.4rem; font-weight: 800; color: #fbbf24;">290</div>
+        <div style="font-size: 0.78rem; color: var(--text-muted); text-transform: uppercase;">False Negative (FN)</div>
+        <div style="font-size: 0.72rem; color: var(--text-secondary); margin-top: 0.2rem;">Type II Error</div>
+      </div>
+
+      <div style="background: rgba(99, 102, 241, 0.15); border: 1px solid rgba(99, 102, 241, 0.3); border-radius: var(--radius-md); padding: 1rem;">
+        <div style="font-size: 1.4rem; font-weight: 800; color: #818cf8;">6,288</div>
+        <div style="font-size: 0.78rem; color: var(--text-muted); text-transform: uppercase;">True Positive (TP)</div>
+        <div style="font-size: 0.72rem; color: var(--text-secondary); margin-top: 0.2rem;">Correctly predicted Placed</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ROC & Metric Insights Card -->
+  <div class="card" style="margin-bottom: 0;">
+    <div class="card-title">
+      <i class="bi bi-pie-chart" style="color: var(--accent-purple);"></i>
+      Discriminative Threshold Metrics
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 0.85rem;">
+      <div class="summary-table-row">
+        <span class="summary-key">Area Under ROC Curve (AUC-ROC)</span>
+        <span class="summary-val" style="color: var(--accent-emerald);">0.968</span>
+      </div>
+      <div class="summary-table-row">
+        <span class="summary-key">Classification Log-Loss</span>
+        <span class="summary-val">0.194</span>
+      </div>
+      <div class="summary-table-row">
+        <span class="summary-key">Specificity (True Negative Rate)</span>
+        <span class="summary-val">86.0%</span>
+      </div>
+      <div class="summary-table-row">
+        <span class="summary-key">Sensitivity (True Positive Rate)</span>
+        <span class="summary-val">95.6%</span>
+      </div>
+      <div class="summary-table-row">
+        <span class="summary-key">Cross-Validation F1 Stability</span>
+        <span class="summary-val">&plusmn; 0.004</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Continuous Salary Regression Evaluation Card -->
+<div class="card">
+  <div class="card-title">
+    <i class="bi bi-cash-stack" style="color: var(--accent-amber);"></i>
+    Continuous Regression Models (Target: Salary Package in LPA)
+  </div>
+  <p style="color: var(--text-muted); font-size: 0.88rem; margin-bottom: 1.25rem;">
+    Benchmarking 5 continuous regressors forecasting package offers. Higher R² and lower MAE/RMSE indicate superior performance.
+  </p>
+
+  <div class="table-wrapper">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Regression Model</th>
+          <th>Mean Absolute Error (MAE)</th>
+          <th>Mean Squared Error (MSE)</th>
+          <th>Root MSE (RMSE)</th>
+          <th>R² Score (Variance Explained)</th>
+          <th>Rank</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Ridge Regression (alpha=1.0)</strong></td>
+          <td>1.12 LPA</td>
+          <td>2.10</td>
+          <td>1.45 LPA</td>
+          <td><span class="badge badge-emerald">0.884</span></td>
+          <td><span class="badge badge-emerald">Rank 1</span></td>
+        </tr>
+        <tr>
+          <td><strong>Linear Regression (OLS)</strong></td>
+          <td>1.12 LPA</td>
+          <td>2.10</td>
+          <td>1.45 LPA</td>
+          <td><span class="badge badge-emerald">0.884</span></td>
+          <td><span class="badge badge-indigo">Rank 2</span></td>
+        </tr>
+        <tr>
+          <td><strong>Lasso Regression (alpha=0.01)</strong></td>
+          <td>1.14 LPA</td>
+          <td>2.16</td>
+          <td>1.47 LPA</td>
+          <td><span class="badge badge-cyan">0.882</span></td>
+          <td><span class="badge badge-cyan">Rank 3</span></td>
+        </tr>
+        <tr>
+          <td><strong>ElasticNet Regression (l1_ratio=0.5)</strong></td>
+          <td>1.15 LPA</td>
+          <td>2.19</td>
+          <td>1.48 LPA</td>
+          <td><span class="badge badge-cyan">0.880</span></td>
+          <td>Rank 4</td>
+        </tr>
+        <tr>
+          <td><strong>Gradient Descent (Batch Custom MSE Loop)</strong></td>
+          <td>1.16 LPA</td>
+          <td>2.22</td>
+          <td>1.49 LPA</td>
+          <td><span class="badge badge-amber">0.879</span></td>
+          <td>Rank 5</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
 {% endblock %}

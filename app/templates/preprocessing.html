@@ -1,5 +1,177 @@
 {% extends "base.html" %}
+
+{% block title %}Preprocessing &bull; Placement Prediction System{% endblock %}
+
 {% block content %}
-<h2>Preprocessing</h2>
-<p>Preprocessing steps will be shown here.</p>
+
+<div class="page-header">
+  <div>
+    <h2 class="page-title">
+      <i class="bi bi-gear-wide-connected" style="color: var(--accent-indigo);"></i>
+      Data Preprocessing Pipeline
+    </h2>
+    <p class="page-subtitle">Standardized transformation, encoding, and imputation pipeline for production model readiness</p>
+  </div>
+  <div>
+    <span class="badge badge-emerald">
+      <i class="bi bi-shield-check"></i> Zero Data Leakage Enforced
+    </span>
+  </div>
+</div>
+
+<!-- Dimension Cards -->
+<div class="stats-grid">
+  <div class="stat-card">
+    <div class="stat-icon indigo">
+      <i class="bi bi-file-earmark-diff"></i>
+    </div>
+    <div>
+      <div class="stat-value">{{ original_shape[0] }} &times; {{ original_shape[1] }}</div>
+      <div class="stat-label">Raw Dataset Shape</div>
+    </div>
+  </div>
+
+  <div class="stat-card">
+    <div class="stat-icon emerald">
+      <i class="bi bi-check-all"></i>
+    </div>
+    <div>
+      <div class="stat-value">{{ final_train_shape[0] }} &times; {{ final_train_shape[1] }}</div>
+      <div class="stat-label">Processed Training Shape (80%)</div>
+    </div>
+  </div>
+
+  <div class="stat-card">
+    <div class="stat-icon cyan">
+      <i class="bi bi-clipboard2-check"></i>
+    </div>
+    <div>
+      <div class="stat-value">{{ final_test_shape[0] }} &times; {{ final_test_shape[1] }}</div>
+      <div class="stat-label">Processed Testing Shape (20%)</div>
+    </div>
+  </div>
+</div>
+
+<!-- Sequential Pipeline Steps -->
+<div class="card">
+  <div class="card-title">
+    <i class="bi bi-bezier2"></i>
+    Automated Sequential Transformation Steps
+  </div>
+  <p style="color: var(--text-muted); font-size: 0.88rem; margin-bottom: 1.25rem;">
+    The raw observations pass through a strictly ordered pipeline where scalers and encoders are fit only on training partitions.
+  </p>
+
+  <div class="pipeline-steps">
+    {% for step in steps %}
+    <div class="step-card">
+      <div class="step-number">{{ loop.index }}</div>
+      <div class="step-content">
+        <h4>{{ step.title }}</h4>
+        <p>{{ step.detail }}</p>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+<!-- Feature Classification Split -->
+<div class="card">
+  <div class="card-title">
+    <i class="bi bi-layers-fill"></i>
+    Feature Type Breakdown
+  </div>
+
+  <div style="margin-bottom: 1.25rem;">
+    <strong style="color: var(--text-primary); font-size: 0.9rem;">
+      <i class="bi bi-123" style="color: var(--accent-cyan);"></i> Numerical Features ({{ numerical_features|length }}):
+    </strong>
+    <div class="tag-cloud" style="margin-top: 0.5rem;">
+      {% for nf in numerical_features %}
+      <span class="tag-pill">{{ nf }}</span>
+      {% endfor %}
+    </div>
+  </div>
+
+  <div>
+    <strong style="color: var(--text-primary); font-size: 0.9rem;">
+      <i class="bi bi-type" style="color: var(--accent-purple);"></i> Categorical Features ({{ categorical_features|length }}):
+    </strong>
+    <div class="tag-cloud" style="margin-top: 0.5rem;">
+      {% for cf in categorical_features %}
+      <span class="tag-pill">{{ cf }}</span>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<!-- Missing Values Audit (if any) -->
+{% if missing_before %}
+<div class="card">
+  <div class="card-title">
+    <i class="bi bi-exclamation-diamond-fill" style="color: var(--accent-amber);"></i>
+    Missing Values Imputation Audit
+  </div>
+  <p style="color: var(--text-muted); font-size: 0.88rem; margin-bottom: 1rem;">
+    The following missing instances were successfully resolved via median strategy imputation:
+  </p>
+  <div class="table-wrapper" style="max-width: 600px;">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Attribute Column</th>
+          <th>Missing Count Prior to Imputation</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for col, count in missing_before.items() %}
+        <tr>
+          <td><strong>{{ col }}</strong></td>
+          <td><span class="badge badge-amber">{{ count }} cells</span></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endif %}
+
+<!-- Processed Training Data Preview -->
+<div class="card">
+  <div class="card-title">
+    <i class="bi bi-table"></i>
+    Preprocessed Training Data Sample (First 5 Rows)
+  </div>
+  <p style="color: var(--text-muted); font-size: 0.88rem; margin-bottom: 1rem;">
+    Standardized continuous variables and one-hot encoded binary vectors ready for tensor feeding.
+  </p>
+
+  <div class="table-wrapper">
+    <table class="data-table">
+      <thead>
+        <tr>
+          {% for col in columns %}
+          <th>{{ col }}</th>
+          {% endfor %}
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in preview_rows %}
+        <tr>
+          {% for val in row %}
+          <td>
+            {% if val is float %}
+              {{ "%.3f"|format(val) }}
+            {% else %}
+              {{ val }}
+            {% endif %}
+          </td>
+          {% endfor %}
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
 {% endblock %}

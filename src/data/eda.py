@@ -1,7 +1,23 @@
+import sys
+from pathlib import Path
+
+PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+
 import pandas as pd
 import seaborn as sns
-from src.data.load_data import load_data
+from src.data.load_data import load_data, BASE_DIR
 from matplotlib import pyplot as plt
+
+RESULTS_DIR = BASE_DIR / "results"
+CHARTS_DIR = BASE_DIR / "app" / "static" / "charts"
+RESULTS_DIR.mkdir(parents=True, exist_ok=True)
+CHARTS_DIR.mkdir(parents=True, exist_ok=True)
+
+def _save_fig(filename):
+    plt.savefig(RESULTS_DIR / filename, bbox_inches='tight')
+    plt.savefig(CHARTS_DIR / filename, bbox_inches='tight')
 
 def basic_eda(df):
     print("\nFirst 5 rows:")
@@ -47,8 +63,7 @@ def basic_eda(df):
     plt.title("Distribution of Placement Status")
     plt.xlabel("Placement Status")
     plt.ylabel("Count")
-    plt.savefig(r"C:\Users\prath\PycharmProjects\PythonPlacementpredictionsystem\results\placement_status_bar.png")
-    plt.show()
+    _save_fig("placement_status_bar.png")
     plt.close()
 
 
@@ -59,8 +74,7 @@ def univariate_eda(df):
     plt.title("Histogram of CGPA")
     plt.xlabel("CGPA")
     plt.ylabel("Frequency")
-    plt.savefig(r"C:\Users\prath\PycharmProjects\PythonPlacementpredictionsystem\results\cgpa_hist.png")
-    plt.show()
+    _save_fig("cgpa_hist.png")
     plt.close()
 
     # Pie chart of Gender
@@ -68,8 +82,7 @@ def univariate_eda(df):
     plt.figure(figsize=(6,5))
     plt.pie(gendercount.values, labels=gendercount.index, autopct="%1.1f%%", startangle=90)
     plt.title("Distribution of Gender")
-    plt.savefig(r"C:\Users\prath\PycharmProjects\PythonPlacementpredictionsystem\results\gender_distribution_pie.png")
-    plt.show()
+    _save_fig("gender_distribution_pie.png")
     plt.close()
 
 
@@ -80,8 +93,7 @@ def bivariate_eda(df):
     plt.title("CGPA vs Aptitude Test Score")
     plt.xlabel("CGPA")
     plt.ylabel("Aptitude Test Score")
-    plt.savefig(r"C:\Users\prath\PycharmProjects\PythonPlacementpredictionsystem\results\cgpa_vs_aptitude.png")
-    plt.show()
+    _save_fig("cgpa_vs_aptitude.png")
     plt.close()
 
     # Boxplot CGPA vs Placement Status
@@ -92,8 +104,7 @@ def bivariate_eda(df):
     plt.title("CGPA vs Placement Status")
     plt.xlabel("Placement Status")
     plt.ylabel("CGPA")
-    plt.savefig(r"C:\Users\prath\PycharmProjects\PythonPlacementpredictionsystem\results\cgpa_vs_placement.png")
-    plt.show()
+    _save_fig("cgpa_vs_placement.png")
     plt.close()
 
     # Gender vs Placement Status (Bar chart)
@@ -102,8 +113,7 @@ def bivariate_eda(df):
     plt.title("Gender vs Placement Status")
     plt.xlabel("Gender")
     plt.ylabel("Count")
-    plt.savefig(r"C:\Users\prath\PycharmProjects\PythonPlacementpredictionsystem\results\gender_vs_placement.png")
-    plt.show()
+    _save_fig("gender_vs_placement.png")
     plt.close()
 
 
@@ -116,8 +126,8 @@ def multivariate_eda(df):
     plt.figure(figsize=(8,6))
     sns.heatmap(correlation, annot=True, cmap="coolwarm", fmt=".2f")
     plt.title("Correlation Matrix")
-    plt.savefig(r"C:\Users\prath\PycharmProjects\PythonPlacementpredictionsystem\results\correlation_matrix_1.png")
-    plt.show()
+    _save_fig("correlation_matrix_1.png")
+    _save_fig("correlation_matrix.png")
     plt.close()
 
 

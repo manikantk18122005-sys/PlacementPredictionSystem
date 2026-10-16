@@ -1,37 +1,31 @@
-from sklearn import tree
-from sklearn.tree import DecisionTreeClassifier
+import sys
+from pathlib import Path
+
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+
 from src.data.load_data import load_data
-import pandas as pd
 from src.data.preprocess import (split_data,identity_features,handle_missing_values,one_hot_encode_data,ordinal_encode_data)
-import matplotlib.pyplot as plt
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score,classification_report,confusion_matrix
+
 def create_model():
     model = RandomForestClassifier(
         n_estimators=100,max_features='sqrt',random_state=42,oob_score=True
     )
     return model
+
 def train_model(model, X_train, y_train):
     model.fit(X_train, y_train)
     return model
+
 def evaluate_model(model, X_test, y_test):
-    y_pred = model.predict(X_test)
-    accuracy = accuracy_score(y_test, y_pred)
-    print("Accuracy")
-    print("Classification Report")
-    print(classification_report(y_test, y_pred))
-    return y_pred
-def display_tree(model,feature_names):
-    plt.figure(figsize=(25,12))
-    tree.plot_tree(model,
-                   feature_names=feature_names,
-                   class_names=["Not placed","Placed"],
-                   filled=True,
-                   rounded=True,
-                   fontsize=8,
-                   )
-    plt.title("ID3 Decision Tree -Placement Prediction")
-    plt.show()
+    accuracy = model.score(X_test, y_test)
+
+    print("Accuracy", accuracy)
+    print("OOB Score", model.oob_score_)
+
 def main():
     df = load_data()
     print("Original Dataset Shape:")
@@ -67,9 +61,8 @@ def main():
 
     model = create_model()
     model = train_model(model,X_train,y_train)
-    y_pred = evaluate_model(model, X_test, y_test)
-    display_tree(model,X_train.columns)
+    evaluate_model(model, X_test, y_test)
+
 
 if __name__ == "__main__":
     main()
-

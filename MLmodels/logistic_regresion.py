@@ -1,19 +1,23 @@
+from pathlib import Path
 import pandas as pd
 import joblib
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import classification_report
 
+BASE_DIR = Path(__file__).resolve().parent.parent
+
 def load_preprocessed_data():
-    train_path = r"C:\Users\prath\PycharmProjects\PythonPlacementpredictionsystem\data\preprocessed_train.csv "
-    test_path = r"C:\Users\prath\PycharmProjects\PythonPlacementpredictionsystem\data\preprocessed_test.csv"
+    train_path = BASE_DIR / "data" / "preprocessed_train.csv"
+    test_path = BASE_DIR / "data" / "preprocessed_test.csv"
     train_data = pd.read_csv(train_path)
     test_data = pd.read_csv(test_path)
     return train_data, test_data
 
 def split_features_target(train_data, test_data):
-    X_train = train_data.drop(columns=["PlacementStatus"])
+    leakage_cols = [c for c in ["PlacementStatus", "StudentID", "Salary Package", "IsAnomaly"] if c in train_data.columns]
+    X_train = train_data.drop(columns=leakage_cols)
     y_train = train_data["PlacementStatus"]
-    X_test = test_data.drop(columns=["PlacementStatus"])
+    X_test = test_data.drop(columns=[c for c in leakage_cols if c in test_data.columns])
     y_test = test_data["PlacementStatus"]
     return X_train, y_train, X_test, y_test
 
@@ -36,10 +40,11 @@ def evaluate_model(model, X_test, y_test):
     print(classification_report(y_test, y_pred))
 
 def save_model(model):
-        model_path = r"C:\Users\prath\PycharmProjects\PythonPlacementpredictionsystem\models\logistic_reg.pkl"
-        joblib.dump(model, model_path)
-        print("Model saved")
-        print(model_path)
+    models_dir = BASE_DIR / "models"
+    models_dir.mkdir(parents=True, exist_ok=True)
+    model_path = models_dir / "logistic_reg.pkl"
+    joblib.dump(model, model_path)
+    print("Model saved to:", model_path)
 
 if __name__ == "__main__":
     train_data, test_data = load_preprocessed_data()

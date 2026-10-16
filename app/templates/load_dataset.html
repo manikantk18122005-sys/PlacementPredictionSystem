@@ -1,53 +1,118 @@
 {% extends "base.html" %}
 
+{% block title %}Dataset &bull; Placement Prediction System{% endblock %}
+
 {% block content %}
 
-<h2>Dataset Loading</h2>
+<div class="page-header">
+  <div>
+    <h2 class="page-title">
+      <i class="bi bi-database-fill" style="color: var(--accent-indigo);"></i>
+      Dataset Exploration
+    </h2>
+    <p class="page-subtitle">Underlying repository of historical engineering student records & placement records</p>
+  </div>
+  <div>
+    <span class="badge badge-emerald">
+      <i class="bi bi-check2-circle"></i> Ingestion Status: Verified
+    </span>
+  </div>
+</div>
 
-<p>
-The placement dataset has been loaded successfully.
-</p>
+<!-- Dataset Summary Cards -->
+<div class="stats-grid">
+  <div class="stat-card">
+    <div class="stat-icon indigo">
+      <i class="bi bi-table"></i>
+    </div>
+    <div>
+      <div class="stat-value">{{ summary.rows }}</div>
+      <div class="stat-label">Total Student Profiles</div>
+    </div>
+  </div>
 
-<h3>Dataset Summary</h3>
+  <div class="stat-card">
+    <div class="stat-icon cyan">
+      <i class="bi bi-layout-three-columns"></i>
+    </div>
+    <div>
+      <div class="stat-value">{{ summary.columns }}</div>
+      <div class="stat-label">Feature Attributes</div>
+    </div>
+  </div>
 
-<table border="1" cellpadding="8">
+  <div class="stat-card">
+    <div class="stat-icon emerald">
+      <i class="bi bi-bullseye"></i>
+    </div>
+    <div>
+      <div class="stat-value" style="font-size: 1.25rem;">{{ summary.target|capitalize }}</div>
+      <div class="stat-label">Target Binary Outcome</div>
+    </div>
+  </div>
 
-    <tr>
-        <th>Total Records</th>
-        <td>{{ summary.rows }}</td>
-    </tr>
+  <div class="stat-card">
+    <div class="stat-icon purple">
+      <i class="bi bi-file-earmark-check"></i>
+    </div>
+    <div>
+      <div class="stat-value">CSV</div>
+      <div class="stat-label">Source Format (data/)</div>
+    </div>
+  </div>
+</div>
 
-    <tr>
-        <th>Total Columns</th>
-        <td>{{ summary.columns }}</td>
-    </tr>
+<!-- First 5 Records Table Card -->
+<div class="card">
+  <div class="card-title">
+    <i class="bi bi-card-list"></i>
+    First 5 Raw Records Preview
+  </div>
+  <p style="color: var(--text-muted); font-size: 0.88rem; margin-bottom: 1.25rem;">
+    Displaying the initial 5 observations demonstrating the multi-semester academic metrics, technical ratings, and demographic fields.
+  </p>
 
-    <tr>
-        <th>Target Variable</th>
-        <td>{{ summary.target }}</td>
-    </tr>
-
-</table>
-
-<br>
-
-<h3>First Five Records</h3>
-
-<p>The first five records of the dataset are shown below.</p>
-
-<table border="1" cellpadding="6">
-    <tr>
-        {% for col in columns %}
-        <th>{{ col }}</th>
+  <div class="table-wrapper">
+    <table class="data-table">
+      <thead>
+        <tr>
+          {% for col in columns %}
+          <th>{{ col }}</th>
+          {% endfor %}
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in first_rows %}
+        <tr>
+          {% for value in row %}
+          <td>
+            {% if value == 1 and loop.index0 == 29 %}
+              <span class="badge badge-emerald">Placed (1)</span>
+            {% elif value == 0 and loop.index0 == 29 %}
+              <span class="badge badge-rose">Not Placed (0)</span>
+            {% else %}
+              {{ value }}
+            {% endif %}
+          </td>
+          {% endfor %}
+        </tr>
         {% endfor %}
-    </tr>
-    {% for row in first_rows %}
-    <tr>
-        {% for value in row %}
-        <td>{{ value }}</td>
-        {% endfor %}
-    </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Features Catalog Card -->
+<div class="card">
+  <div class="card-title">
+    <i class="bi bi-tags-fill"></i>
+    Feature Taxonomy ({{ columns|length }} Columns)
+  </div>
+  <div class="tag-cloud">
+    {% for col in columns %}
+    <span class="tag-pill">{{ col }}</span>
     {% endfor %}
-</table>
+  </div>
+</div>
 
 {% endblock %}

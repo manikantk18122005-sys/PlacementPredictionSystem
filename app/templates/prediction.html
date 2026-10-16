@@ -1,5 +1,264 @@
 {% extends "base.html" %}
+
+{% block title %}Prediction &bull; Placement Prediction System{% endblock %}
+
 {% block content %}
-<h2>Prediction</h2>
-<p>Prediction form will be added here.</p>
+
+<div class="page-header">
+  <div>
+    <h2 class="page-title">
+      <i class="bi bi-magic" style="color: var(--accent-indigo);"></i>
+      Live Student Placement Predictor
+    </h2>
+    <p class="page-subtitle">Input student academic credentials, technical assessments, and project experience to forecast placement probability</p>
+  </div>
+  <div>
+    <span class="badge badge-indigo">
+      <i class="bi bi-cpu-fill"></i> Model: Logistic Regression Classifier
+    </span>
+  </div>
+</div>
+
+<div class="predictor-layout">
+
+  <!-- Prediction Form Card -->
+  <div class="card" style="margin-bottom: 0;">
+    <div class="card-title">
+      <i class="bi bi-person-badge-fill"></i>
+      Candidate Information Form
+    </div>
+    <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1.25rem;">
+      Fill in the candidate metrics below or adjust the defaults to test predictive scenarios.
+    </p>
+
+    <form method="POST" action="{{ url_for('prediction') }}">
+
+      <!-- Section 1: Academic Profile -->
+      <div class="form-section-title">
+        <i class="bi bi-mortarboard" style="color: var(--accent-cyan);"></i> 1. Academic Performance
+      </div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="cgpa">Cumulative CGPA (0 - 10)</label>
+          <input type="number" step="0.01" min="0" max="10" name="cgpa" id="cgpa" class="form-control" value="{{ form_data.cgpa if form_data else '7.85' }}" required>
+        </div>
+
+        <div class="form-group">
+          <label for="college_tier">College Tier</label>
+          <select name="college_tier" id="college_tier" class="form-control" required>
+            <option value="1" {% if form_data and form_data.college_tier == '1' %}selected{% endif %}>Tier 1 (Premier / IIT / NIT)</option>
+            <option value="2" {% if not form_data or form_data.college_tier == '2' %}selected{% endif %}>Tier 2 (State Govt / Autonomous)</option>
+            <option value="3" {% if form_data and form_data.college_tier == '3' %}selected{% endif %}>Tier 3 (Affiliated)</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="backlogs">History of Backlogs</label>
+          <select name="backlogs" id="backlogs" class="form-control" required>
+            <option value="No" {% if not form_data or form_data.backlogs == 'No' %}selected{% endif %}>No Backlogs</option>
+            <option value="Yes" {% if form_data and form_data.backlogs == 'Yes' %}selected{% endif %}>Yes (Cleared / Active)</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="attendance">Attendance Percentage (%)</label>
+          <input type="number" step="0.5" min="0" max="100" name="attendance" id="attendance" class="form-control" value="{{ form_data.attendance if form_data else '82.0' }}" required>
+        </div>
+      </div>
+
+      <!-- Section 2: Technical Skills & Assessments -->
+      <div class="form-section-title">
+        <i class="bi bi-code-slash" style="color: var(--accent-indigo);"></i> 2. Technical & Assessment Scores
+      </div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="aptitude">Aptitude Test Score (0 - 100)</label>
+          <input type="number" step="0.5" min="0" max="100" name="aptitude" id="aptitude" class="form-control" value="{{ form_data.aptitude if form_data else '78.5' }}" required>
+        </div>
+
+        <div class="form-group">
+          <label for="coding">Coding Test Score (0 - 100)</label>
+          <input type="number" step="0.5" min="0" max="100" name="coding" id="coding" class="form-control" value="{{ form_data.coding if form_data else '72.0' }}" required>
+        </div>
+
+        <div class="form-group">
+          <label for="interview">Mock Interview Score (0 - 100)</label>
+          <input type="number" step="0.5" min="0" max="100" name="interview" id="interview" class="form-control" value="{{ form_data.interview if form_data else '70.0' }}" required>
+        </div>
+
+        <div class="form-group">
+          <label for="softskills">Soft Skills Rating (1 - 5)</label>
+          <input type="number" step="0.1" min="1" max="5" name="softskills" id="softskills" class="form-control" value="{{ form_data.softskills if form_data else '3.8' }}" required>
+        </div>
+      </div>
+
+      <!-- Section 3: Practical Projects & Background -->
+      <div class="form-section-title">
+        <i class="bi bi-folder-check" style="color: var(--accent-emerald);"></i> 3. Experience & Specialization
+      </div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="internships">Internships Completed</label>
+          <input type="number" min="0" max="10" name="internships" id="internships" class="form-control" value="{{ form_data.internships if form_data else '2' }}" required>
+        </div>
+
+        <div class="form-group">
+          <label for="projects">Major Projects</label>
+          <input type="number" min="0" max="15" name="projects" id="projects" class="form-control" value="{{ form_data.projects if form_data else '3' }}" required>
+        </div>
+
+        <div class="form-group">
+          <label for="certifications">Certifications</label>
+          <input type="number" min="0" max="15" name="certifications" id="certifications" class="form-control" value="{{ form_data.certifications if form_data else '2' }}" required>
+        </div>
+
+        <div class="form-group">
+          <label for="stream">Engineering Stream</label>
+          <select name="stream" id="stream" class="form-control" required>
+            <option value="CS" {% if not form_data or form_data.stream == 'CS' %}selected{% endif %}>Computer Science (CS)</option>
+            <option value="IT" {% if form_data and form_data.stream == 'IT' %}selected{% endif %}>Information Technology (IT)</option>
+            <option value="ECE" {% if form_data and form_data.stream == 'ECE' %}selected{% endif %}>Electronics & Comm (ECE)</option>
+            <option value="EE" {% if form_data and form_data.stream == 'EE' %}selected{% endif %}>Electrical Eng (EE)</option>
+            <option value="Mechanical" {% if form_data and form_data.stream == 'Mechanical' %}selected{% endif %}>Mechanical Eng</option>
+            <option value="Civil" {% if form_data and form_data.stream == 'Civil' %}selected{% endif %}>Civil Eng</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="specialisation">Technical Specialization</label>
+          <select name="specialisation" id="specialisation" class="form-control" required>
+            <option value="AI" {% if not form_data or form_data.specialisation == 'AI' %}selected{% endif %}>Artificial Intelligence (AI)</option>
+            <option value="DataScience" {% if form_data and form_data.specialisation == 'DataScience' %}selected{% endif %}>Data Science</option>
+            <option value="Embedded" {% if form_data and form_data.specialisation == 'Embedded' %}selected{% endif %}>Embedded Systems</option>
+            <option value="Networking" {% if form_data and form_data.specialisation == 'Networking' %}selected{% endif %}>Cloud & Networking</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="gender">Gender</label>
+          <select name="gender" id="gender" class="form-control" required>
+            <option value="Male" {% if not form_data or form_data.gender == 'Male' %}selected{% endif %}>Male</option>
+            <option value="Female" {% if form_data and form_data.gender == 'Female' %}selected{% endif %}>Female</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="city">City Hub</label>
+          <select name="city" id="city" class="form-control" required>
+            <option value="Bangalore" {% if not form_data or form_data.city == 'Bangalore' %}selected{% endif %}>Bangalore</option>
+            <option value="Pune" {% if form_data and form_data.city == 'Pune' %}selected{% endif %}>Pune</option>
+            <option value="Hyderabad" {% if form_data and form_data.city == 'Hyderabad' %}selected{% endif %}>Hyderabad</option>
+            <option value="Mumbai" {% if form_data and form_data.city == 'Mumbai' %}selected{% endif %}>Mumbai</option>
+            <option value="Delhi" {% if form_data and form_data.city == 'Delhi' %}selected{% endif %}>Delhi</option>
+            <option value="Chennai" {% if form_data and form_data.city == 'Chennai' %}selected{% endif %}>Chennai</option>
+            <option value="Kolkata" {% if form_data and form_data.city == 'Kolkata' %}selected{% endif %}>Kolkata</option>
+            <option value="Ahmedabad" {% if form_data and form_data.city == 'Ahmedabad' %}selected{% endif %}>Ahmedabad</option>
+            <option value="Jaipur" {% if form_data and form_data.city == 'Jaipur' %}selected{% endif %}>Jaipur</option>
+            <option value="Kochi" {% if form_data and form_data.city == 'Kochi' %}selected{% endif %}>Kochi</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="hostel">Hostel Resident</label>
+          <select name="hostel" id="hostel" class="form-control" required>
+            <option value="No" {% if not form_data or form_data.hostel == 'No' %}selected{% endif %}>Day Scholar (No)</option>
+            <option value="Yes" {% if form_data and form_data.hostel == 'Yes' %}selected{% endif %}>Hostel Resident (Yes)</option>
+          </select>
+        </div>
+      </div>
+
+      <div style="margin-top: 1.5rem; display: flex; gap: 1rem;">
+        <button type="submit" class="btn btn-primary" style="flex: 1; justify-content: center;">
+          <i class="bi bi-lightning-charge-fill"></i> Execute Placement Prediction
+        </button>
+      </div>
+
+    </form>
+  </div>
+
+  <!-- Prediction Results Card -->
+  <div>
+    {% if result %}
+    <div class="result-card {% if result.is_placed %}placed{% else %}not-placed{% endif %}">
+
+      {% if result.is_placed %}
+      <div class="result-badge placed">
+        <i class="bi bi-patch-check-fill"></i> PREDICTED: PLACED
+      </div>
+      <h3 style="color: var(--text-primary); font-size: 1.5rem; margin-bottom: 0.5rem;">
+        Strong Candidate Profile!
+      </h3>
+      <p style="color: var(--text-secondary); font-size: 0.95rem;">
+        This candidate demonstrates high competitive readiness with favorable academic & skill indicators.
+      </p>
+      {% else %}
+      <div class="result-badge not-placed">
+        <i class="bi bi-exclamation-triangle-fill"></i> PREDICTED: NOT PLACED
+      </div>
+      <h3 style="color: var(--text-primary); font-size: 1.5rem; margin-bottom: 0.5rem;">
+        Needs Skill Augmentation
+      </h3>
+      <p style="color: var(--text-secondary); font-size: 0.95rem;">
+        The candidate profile falls below the competitive recruitment threshold. Focused preparation recommended.
+      </p>
+      {% endif %}
+
+      <!-- Probability Meter -->
+      <div style="margin-top: 1.75rem; text-align: left;">
+        <div style="display: flex; justify-content: space-between; font-size: 0.9rem; font-weight: 700;">
+          <span style="color: var(--text-secondary);">Placement Probability</span>
+          <span style="color: {% if result.is_placed %}#34d399{% else %}#f87171{% endif %}; font-size: 1.2rem;">
+            {{ result.probability }}%
+          </span>
+        </div>
+
+        <div class="probability-bar-container">
+          <div class="probability-bar-fill" style="width: {{ result.probability }}%; background: {% if result.is_placed %}var(--gradient-success){% else %}var(--gradient-danger){% endif %};"></div>
+        </div>
+      </div>
+
+      <!-- Salary Estimate -->
+      <div style="background: rgba(0,0,0,0.2); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 1.25rem; margin: 1.5rem 0; text-align: left;">
+        <div style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700;">
+          Estimated CTC Package Range
+        </div>
+        <div style="font-size: 1.6rem; font-weight: 800; color: var(--accent-cyan); margin-top: 0.25rem;">
+          {{ result.salary_estimate }}
+        </div>
+        <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.2rem;">
+          Forecasted via multi-variable regression on peer industry hiring packages.
+        </div>
+      </div>
+
+      <!-- Actionable Insights -->
+      <div style="text-align: left;">
+        <div style="font-size: 0.9rem; font-weight: 700; color: var(--text-primary); margin-bottom: 0.5rem;">
+          <i class="bi bi-stars" style="color: var(--accent-amber);"></i> Strategic Recommendation:
+        </div>
+        <ul style="padding-left: 1.25rem; font-size: 0.85rem; color: var(--text-secondary); line-height: 1.5;">
+          {% for tip in result.recommendations %}
+          <li style="margin-bottom: 0.4rem;">{{ tip }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+
+    </div>
+    {% else %}
+    <!-- Empty State prior to submission -->
+    <div class="card" style="text-align: center; padding: 3.5rem 2rem; margin-bottom: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 400px;">
+      <div style="width: 72px; height: 72px; border-radius: 50%; background: rgba(99, 102, 241, 0.1); border: 1px dashed var(--accent-indigo); display: flex; align-items: center; justify-content: center; font-size: 2rem; color: var(--accent-indigo); margin-bottom: 1.25rem;">
+        <i class="bi bi-cpu"></i>
+      </div>
+      <h3 style="font-size: 1.25rem; font-weight: 700; color: var(--text-primary); margin-bottom: 0.5rem;">
+        Awaiting Input Submission
+      </h3>
+      <p style="color: var(--text-muted); font-size: 0.9rem; max-width: 380px; line-height: 1.5;">
+        Configure the academic, assessment, and internship credentials on the left and click <strong>Execute Placement Prediction</strong> to generate real-time probability estimates.
+      </p>
+    </div>
+    {% endif %}
+  </div>
+
+</div>
+
 {% endblock %}

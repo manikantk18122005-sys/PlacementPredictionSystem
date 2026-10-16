@@ -1,7 +1,15 @@
+import os
+from pathlib import Path
 import pandas as pd
 
-def load_data():
-    df = pd.read_csv(r"C:\Users\prath\PycharmProjects\PythonPlacementpredictionsystem\data\placement_data.csv")
+# Define base directory dynamically
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
+DATA_PATH = BASE_DIR / "data" / "placement_data.csv"
+
+def load_data(filepath=None):
+    if filepath is None:
+        filepath = DATA_PATH
+    df = pd.read_csv(filepath)
     return df
 
 def get_summary(df):

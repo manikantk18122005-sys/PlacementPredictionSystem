@@ -1,37 +1,140 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Placement Prediction System</title>
-    <!-- CSS File -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Placement Prediction System{% endblock %}</title>
+
+  <!-- Google Fonts: Plus Jakarta Sans & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Bootstrap Icons CDN -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+  <!-- Main Theme CSS -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <!-- Header -->
-    <header>
-        <h1>Placement Prediction System</h1>
-        <p>Machine Learning Project using Flask</p>
 
-    </header>
-    <hr>
-    <!-- Navigation Menu -->
-    <nav>
-        <a href="/">Home</a> |
-        <a href="/dataset">Dataset</a> |
-        <a href="/eda">EDA</a> |
-        <a href="/preprocessing">Preprocessing</a> |
-        <a href="/models">Models</a> |
-        <a href="/evaluation">Evaluation</a> |
-        <a href="/comparison">Comparison</a> |
-        <a href="/prediction">Prediction</a>
-    </nav>
-    <hr>
-    <!-- Page Content -->
-    <div>
-        {% block content %}
+  <!-- Top Executive Header -->
+  <header class="main-header">
+    <div class="header-container">
+      <a href="{{ url_for('home') }}" class="brand-wrapper">
+        <div class="brand-logo-icon">
+          <i class="bi bi-mortarboard-fill"></i>
+        </div>
+        <div class="brand-text">
+          <h1>Placement Prediction System</h1>
+          <p>Machine Learning Project using Flask</p>
+        </div>
+      </a>
 
-        {% endblock %}
+      <div class="header-actions">
+        <div class="status-indicator">
+          <span class="pulse-dot"></span>
+          <span>System Online</span>
+        </div>
+
+        <button id="themeToggleBtn" class="theme-toggle-btn" title="Toggle Theme" onclick="toggleTheme()">
+          <i class="bi bi-sun-fill" id="themeIcon"></i>
+          <span id="themeLabel">Light</span>
+        </button>
+      </div>
     </div>
+  </header>
+
+  <!-- Modern Navigation Bar -->
+  <nav class="main-nav">
+    <div class="nav-container">
+      <a href="{{ url_for('home') }}" class="nav-item {% if request.path in ['/', '/home'] %}active{% endif %}">
+        <i class="bi bi-house-door-fill"></i>
+        <span>Home</span>
+      </a>
+      <a href="{{ url_for('dataset') }}" class="nav-item {% if request.path == '/dataset' %}active{% endif %}">
+        <i class="bi bi-database-fill"></i>
+        <span>Dataset</span>
+      </a>
+      <a href="{{ url_for('eda') }}" class="nav-item {% if request.path == '/eda' %}active{% endif %}">
+        <i class="bi bi-bar-chart-fill"></i>
+        <span>EDA</span>
+      </a>
+      <a href="{{ url_for('preprocessing') }}" class="nav-item {% if request.path == '/preprocessing' %}active{% endif %}">
+        <i class="bi bi-gear-wide-connected"></i>
+        <span>Preprocessing</span>
+      </a>
+      <a href="{{ url_for('models') }}" class="nav-item {% if request.path == '/models' %}active{% endif %}">
+        <i class="bi bi-cpu-fill"></i>
+        <span>Models</span>
+      </a>
+      <a href="{{ url_for('evaluation') }}" class="nav-item {% if request.path == '/evaluation' %}active{% endif %}">
+        <i class="bi bi-check-circle-fill"></i>
+        <span>Evaluation</span>
+      </a>
+      <a href="{{ url_for('comparison') }}" class="nav-item {% if request.path == '/comparison' %}active{% endif %}">
+        <i class="bi bi-clipboard-data-fill"></i>
+        <span>Comparison</span>
+      </a>
+      <a href="{{ url_for('prediction') }}" class="nav-item {% if request.path == '/prediction' %}active{% endif %}">
+        <i class="bi bi-magic"></i>
+        <span>Prediction</span>
+      </a>
+    </div>
+  </nav>
+
+  <!-- Page Content -->
+  <main class="content-area">
+    {% block content %}
+    {% endblock %}
+  </main>
+
+  <!-- Modern Footer -->
+  <footer class="main-footer">
+    <div class="footer-container">
+      <div>
+        <strong>Placement Prediction System</strong> &copy; 2026 &bull; Advanced Machine Learning Portfolio
+      </div>
+      <div class="tech-pills">
+        <span class="tech-pill"><i class="bi bi-filetype-py"></i> Python 3.13</span>
+        <span class="tech-pill"><i class="bi bi-fire"></i> Flask 3.1</span>
+        <span class="tech-pill"><i class="bi bi-diagram-3"></i> Scikit-Learn</span>
+        <span class="tech-pill"><i class="bi bi-table"></i> Pandas</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Theme Switching Script -->
+  <script>
+    function applySavedTheme() {
+      const savedTheme = localStorage.getItem('pps_theme') || 'dark';
+      document.documentElement.setAttribute('data-theme', savedTheme);
+      updateThemeUI(savedTheme);
+    }
+
+    function toggleTheme() {
+      const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', newTheme);
+      localStorage.setItem('pps_theme', newTheme);
+      updateThemeUI(newTheme);
+    }
+
+    function updateThemeUI(theme) {
+      const icon = document.getElementById('themeIcon');
+      const label = document.getElementById('themeLabel');
+      if (theme === 'dark') {
+        icon.className = 'bi bi-sun-fill';
+        label.textContent = 'Light';
+      } else {
+        icon.className = 'bi bi-moon-stars-fill';
+        label.textContent = 'Dark';
+      }
+    }
+
+    // Apply on load
+    applySavedTheme();
+  </script>
+
 </body>
 </html>

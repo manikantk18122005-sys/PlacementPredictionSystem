@@ -1,10 +1,16 @@
+import sys
+from pathlib import Path
+
+PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+
 import numpy as np
 import pandas as pd
-from scipy.stats import false_discovery_control
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler, OneHotEncoder, OrdinalEncoder
 from sklearn.impute import SimpleImputer
-from src.data.load_data import load_data   # your custom loader
+from src.data.load_data import load_data, BASE_DIR   # your custom loader
 
 def split_data(df,target_column,drop_columns=None,stratify=False):
     # Target column should match your dataset
@@ -18,9 +24,16 @@ def split_data(df,target_column,drop_columns=None,stratify=False):
     )
     return X_train, X_test, y_train, y_test
 
+def split_X_data(df, drop_columns=None):
+    # Unsupervised version of split_data: no target column, no train/test split
+    if drop_columns is None:
+        drop_columns = []
+    X = df.drop(columns=drop_columns)
+    return X
+
 def identity_features(X):
-    numerical_features = X.select_dtypes(include=["int64", "float64"]).columns.tolist()
-    categorical_features = X.select_dtypes(include=["object", "category"]).columns.tolist()
+    numerical_features = X.select_dtypes(include=["number"]).columns.tolist()
+    categorical_features = X.select_dtypes(include=["object", "category", "string"]).columns.tolist()
     return numerical_features, categorical_features
 
 def handle_missing_values(X_train, X_test, numerical_features):
@@ -91,7 +104,7 @@ if __name__ == "__main__":
     df = load_data()
     print("Original Data Shape:", df.shape)
 
-    X_train, X_test, y_train, y_test = split_data(df)
+    X_train, X_test, y_train, y_test = split_data(df, target_column="PlacementStatus")
     print("Training shape:", X_train.shape)
     print("Testing shape:", X_test.shape)
 
@@ -128,8 +141,10 @@ if __name__ == "__main__":
     X_test["PlacementStatus"] = y_test
 
     # Save preprocessed data
-    X_train.to_csv(r"C:\Users\prath\PycharmProjects\PythonPlacementpredictionsystem\data\preprocessed_train.csv", index=False)
-    X_test.to_csv(r"C:\Users\prath\PycharmProjects\PythonPlacementpredictionsystem\data\preprocessed_test.csv", index=False)
+    data_dir = BASE_DIR / "data"
+    data_dir.mkdir(parents=True, exist_ok=True)
+    X_train.to_csv(data_dir / "preprocessed_train.csv", index=False)
+    X_test.to_csv(data_dir / "preprocessed_test.csv", index=False)
 
     print("Preprocessing finished. Train and test CSVs saved.")
     print(X_train.head())

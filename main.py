@@ -1,16 +1,23 @@
-# This is a sample Python script.
+"""
+Placement Prediction System - PyCharm Launcher & Main Entry Point
+=================================================================
+Run this file directly in PyCharm (Right-Click -> Run 'main') or from the terminal:
+    python main.py
+"""
 
-# Press Ctrl+F5 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+import os
+import sys
 
+# Ensure root directory is on the Python path
+current_dir = os.path.dirname(os.path.abspath(__file__))
+if current_dir not in sys.path:
+    sys.path.insert(0, current_dir)
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press F9 to toggle the breakpoint.
+from app.app import app
 
-
-# Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    print_hi('PyCharm')
-
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+    print("=" * 68)
+    print("  Starting Placement Prediction System...")
+    print("  Local URL: http://127.0.0.1:5000")
+    print("=" * 68)
+    app.run(host='127.0.0.1', port=5000, debug=True)

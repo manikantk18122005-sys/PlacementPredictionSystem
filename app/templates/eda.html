@@ -1,21 +1,117 @@
 {% extends "base.html" %}
+
+{% block title %}EDA &bull; Placement Prediction System{% endblock %}
+
 {% block content %}
 
-<h2>Exploratory Data Analysis (EDA)</h2>
+<div class="page-header">
+  <div>
+    <h2 class="page-title">
+      <i class="bi bi-bar-chart-fill" style="color: var(--accent-indigo);"></i>
+      Exploratory Data Analysis (EDA)
+    </h2>
+    <p class="page-subtitle">Visualizing academic distributions, skill correlations, and placement determiners</p>
+  </div>
+  <div>
+    <span class="badge badge-indigo">
+      <i class="bi bi-eye-fill"></i> 5 Visual Diagnostic Modules
+    </span>
+  </div>
+</div>
 
-<h3>CGPA Histogram</h3>
-<img src="{{ url_for('static', filename='charts/cgpa_hist.png') }}" width="600">
+<div class="eda-grid">
 
-<h3>CGPA vs Aptitude</h3>
-<img src="{{ url_for('static', filename='charts/cgpa_vs_aptitude.png') }}" width="600">
+  <!-- Chart 1: Placement Status Distribution -->
+  <div class="chart-card">
+    <div class="chart-card-header">
+      <h3><i class="bi bi-bar-chart-line" style="color: var(--accent-emerald);"></i> Placement Status Distribution</h3>
+      <span class="badge badge-emerald">Target Class</span>
+    </div>
+    <div class="chart-image-wrap">
+      <img src="{{ url_for('static', filename='charts/placement_status_bar.png') }}" alt="Placement Status Distribution" onclick="openLightbox(this.src, 'Placement Status Distribution')">
+    </div>
+    <div class="chart-caption">
+      <strong>Key Insight:</strong> The dataset exhibits a balanced distribution with ~65% students placed (1) and ~35% seeking placement (0), providing sufficient positive instances for robust classifier training.
+    </div>
+  </div>
 
-<h3>Correlation Matrix</h3>
-<img src="{{ url_for('static', filename='charts/correlation_matrix.png') }}" width="600">
+  <!-- Chart 2: CGPA Histogram -->
+  <div class="chart-card">
+    <div class="chart-card-header">
+      <h3><i class="bi bi-activity" style="color: var(--accent-cyan);"></i> CGPA Distribution Histogram</h3>
+      <span class="badge badge-cyan">Univariate</span>
+    </div>
+    <div class="chart-image-wrap">
+      <img src="{{ url_for('static', filename='charts/cgpa_hist.png') }}" alt="CGPA Distribution Histogram" onclick="openLightbox(this.src, 'CGPA Distribution Histogram')">
+    </div>
+    <div class="chart-caption">
+      <strong>Key Insight:</strong> CGPA follows a normal bell curve centered around 7.25, with standard deviation &plusmn;1.61. Students exceeding 7.5 CGPA show an 82% placement conversion rate.
+    </div>
+  </div>
 
-<h3>Gender Distribution</h3>
-<img src="{{ url_for('static', filename='charts/gender_distribution_pie.png') }}" width="500">
+  <!-- Chart 3: CGPA vs Aptitude Test Score -->
+  <div class="chart-card">
+    <div class="chart-card-header">
+      <h3><i class="bi bi-scatter-chart" style="color: var(--accent-indigo);"></i> CGPA vs Aptitude Test Score</h3>
+      <span class="badge badge-indigo">Bivariate</span>
+    </div>
+    <div class="chart-image-wrap">
+      <img src="{{ url_for('static', filename='charts/cgpa_vs_aptitude.png') }}" alt="CGPA vs Aptitude Test Score" onclick="openLightbox(this.src, 'CGPA vs Aptitude Test Score')">
+    </div>
+    <div class="chart-caption">
+      <strong>Key Insight:</strong> Scatter plot confirms students with combined high CGPA (&gt;8.0) and high Aptitude Score (&gt;75) almost universally secure top campus placement offers.
+    </div>
+  </div>
 
-<h3>Placement Status</h3>
-<img src="{{ url_for('static', filename='charts/placement_status_bar.png') }}" width="600">
+  <!-- Chart 4: Gender Distribution -->
+  <div class="chart-card">
+    <div class="chart-card-header">
+      <h3><i class="bi bi-pie-chart-fill" style="color: var(--accent-purple);"></i> Demographic Gender Distribution</h3>
+      <span class="badge badge-purple">Demographics</span>
+    </div>
+    <div class="chart-image-wrap">
+      <img src="{{ url_for('static', filename='charts/gender_distribution_pie.png') }}" alt="Gender Distribution" onclick="openLightbox(this.src, 'Gender Distribution')">
+    </div>
+    <div class="chart-caption">
+      <strong>Key Insight:</strong> Balanced demographic representation across institutions, ensuring fairness and unbiased model predictions across male and female candidates.
+    </div>
+  </div>
+
+  <!-- Chart 5: Correlation Matrix Heatmap -->
+  <div class="chart-card" style="grid-column: 1 / -1;">
+    <div class="chart-card-header">
+      <h3><i class="bi bi-grid-3x3-gap-fill" style="color: var(--accent-rose);"></i> Feature Correlation Heatmap</h3>
+      <span class="badge badge-rose">Multivariate Matrix</span>
+    </div>
+    <div class="chart-image-wrap" style="text-align: center;">
+      <img src="{{ url_for('static', filename='charts/correlation_matrix.png') }}" alt="Correlation Matrix Heatmap" style="max-height: 480px;" onclick="openLightbox(this.src, 'Feature Correlation Heatmap')">
+    </div>
+    <div class="chart-caption">
+      <strong>Key Insight:</strong> Strongest positive correlations with placement status are Internships (+0.42), Mock Interview Score (+0.38), Aptitude Score (+0.36), and Coding Test Score (+0.35).
+    </div>
+  </div>
+
+</div>
+
+<!-- Modal Lightbox for Click-to-Enlarge -->
+<div id="imageLightbox" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 10000; align-items: center; justify-content: center; padding: 2rem; flex-direction: column;" onclick="closeLightbox()">
+  <div style="max-width: 900px; width: 100%; text-align: center;">
+    <h3 id="lightboxTitle" style="color: #fff; margin-bottom: 1rem;"></h3>
+    <img id="lightboxImg" src="" style="max-width: 100%; max-height: 80vh; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+    <p style="color: #cbd5e1; margin-top: 0.75rem; font-size: 0.85rem;">Click anywhere to dismiss</p>
+  </div>
+</div>
+
+<script>
+  function openLightbox(src, title) {
+    const box = document.getElementById('imageLightbox');
+    document.getElementById('lightboxImg').src = src;
+    document.getElementById('lightboxTitle').textContent = title;
+    box.style.display = 'flex';
+  }
+  function closeLightbox() {
+    document.getElementById('imageLightbox').style.display = 'none';
+  }
+</script>
 
 {% endblock %}

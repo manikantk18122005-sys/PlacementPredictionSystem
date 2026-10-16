@@ -1,9 +1,120 @@
 {% extends "base.html" %}
 
+{% block title %}Home &bull; Placement Prediction System{% endblock %}
+
 {% block content %}
 
-<h2>Home Page</h2>
+<!-- Hero Banner -->
+<div class="hero-banner">
+  <div class="hero-tag">
+    <i class="bi bi-stars"></i> Intelligent Machine Learning Engine
+  </div>
+  <h2 class="hero-title">Predict Student Placements with Precision</h2>
+  <p class="hero-desc">
+    An end-to-end Machine Learning intelligence platform leveraging supervised classification, regression models, and unsupervised clustering algorithms to forecast student placement outcomes and estimate CTC package valuations.
+  </p>
+  <div class="hero-actions">
+    <a href="{{ url_for('prediction') }}" class="btn btn-primary">
+      <i class="bi bi-magic"></i> Live Placement Predictor
+    </a>
+    <a href="{{ url_for('dataset') }}" class="btn btn-secondary">
+      <i class="bi bi-database"></i> Explore Dataset (50,000 Records)
+    </a>
+    <a href="{{ url_for('comparison') }}" class="btn btn-secondary">
+      <i class="bi bi-bar-chart"></i> Compare 9 Models
+    </a>
+  </div>
+</div>
 
-<p>Welcome to the Placement Prediction System.</p>
+<!-- Key Stat Counters -->
+<div class="stats-grid">
+  <div class="stat-card">
+    <div class="stat-icon indigo">
+      <i class="bi bi-people-fill"></i>
+    </div>
+    <div>
+      <div class="stat-value">50,000</div>
+      <div class="stat-label">Total Student Profiles</div>
+    </div>
+  </div>
+
+  <div class="stat-card">
+    <div class="stat-icon cyan">
+      <i class="bi bi-sliders"></i>
+    </div>
+    <div>
+      <div class="stat-value">32</div>
+      <div class="stat-label">Features & Attributes</div>
+    </div>
+  </div>
+
+  <div class="stat-card">
+    <div class="stat-icon emerald">
+      <i class="bi bi-cpu-fill"></i>
+    </div>
+    <div>
+      <div class="stat-value">9 Models</div>
+      <div class="stat-label">Supervised & Unsupervised</div>
+    </div>
+  </div>
+
+  <div class="stat-card">
+    <div class="stat-icon purple">
+      <i class="bi bi-award-fill"></i>
+    </div>
+    <div>
+      <div class="stat-value">99.71%</div>
+      <div class="stat-label">Peak Classification Accuracy</div>
+    </div>
+  </div>
+</div>
+
+<!-- System Capabilities Grid -->
+<div class="card">
+  <div class="card-title">
+    <i class="bi bi-diagram-3-fill"></i> Project Architecture & Pipeline
+  </div>
+  <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">
+    This application covers the full data science lifecycle from exploratory analysis to deployment:
+  </p>
+
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.25rem;">
+    <div style="background: rgba(0,0,0,0.15); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 1.25rem;">
+      <h4 style="color: var(--accent-indigo); margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.4rem;">
+        <i class="bi bi-database"></i> 1. Dataset & Ingestion
+      </h4>
+      <p style="font-size: 0.88rem; color: var(--text-secondary);">
+        Ingests 50,000 verified student profiles across 10 metropolitan hubs with 8-semester SGPA and extracurricular metrics.
+      </p>
+    </div>
+
+    <div style="background: rgba(0,0,0,0.15); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 1.25rem;">
+      <h4 style="color: var(--accent-cyan); margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.4rem;">
+        <i class="bi bi-graph-up"></i> 2. Exploratory Analysis
+      </h4>
+      <p style="font-size: 0.88rem; color: var(--text-secondary);">
+        Univariate, bivariate, and correlation heatmaps identifying top drivers: CGPA, Aptitude, Internships, and Backlog records.
+      </p>
+    </div>
+
+    <div style="background: rgba(0,0,0,0.15); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 1.25rem;">
+      <h4 style="color: var(--accent-emerald); margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.4rem;">
+        <i class="bi bi-gear-fill"></i> 3. Automated Preprocessing
+      </h4>
+      <p style="font-size: 0.88rem; color: var(--text-secondary);">
+        Median imputation, StandardScaler transformation, one-hot encoding for cities/streams, and ordinal encoding for tier rankings.
+      </p>
+    </div>
+
+    <div style="background: rgba(0,0,0,0.15); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 1.25rem;">
+      <h4 style="color: var(--accent-purple); margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.4rem;">
+        <i class="bi bi-cpu"></i> 4. Multi-Model Suite
+      </h4>
+      <p style="font-size: 0.88rem; color: var(--text-secondary);">
+        Trained Logistic Regression, ID3 Decision Trees, Random Forests, Regularized Regressions, Batch Gradient Descent, K-Means, and DBSCAN.
+      </p>
+    </div>
+  </div>
+</div>
 
 {% endblock %}
