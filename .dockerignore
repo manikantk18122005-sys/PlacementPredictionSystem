@@ -1,0 +1,20 @@
+# Git metadata
+.git/
+.gitignore
+
+# Virtual environments & IDE configurations
+.venv/
+venv/
+.idea/
+.vscode/
+
+# Python compiled cache & bytecode
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Operating system artifacts & logs
+.DS_Store
+Thumbs.db
+*.log
